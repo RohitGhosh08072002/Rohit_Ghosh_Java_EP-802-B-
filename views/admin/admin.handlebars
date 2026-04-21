@@ -1,0 +1,103 @@
+<div class="text-center mb-4">
+    <p style="color: #94a3b8; font-size: 0.95rem;"><i class="fas fa-user-shield mr-2"></i>Administration Analytics and System Mapping</p>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-3 mb-3">
+        <div class="stat-card bg-blue-accent">
+            <h5 class="stat-card-title">Total Complaints</h5>
+            <h2 class="stat-card-value">{{stats.total}}</h2>
+            <i class="fas fa-chart-bar stat-card-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card bg-green-accent">
+            <h5 class="stat-card-title">Resolved</h5>
+            <h2 class="stat-card-value">{{stats.resolved}}</h2>
+            <i class="fas fa-map-marker-alt stat-card-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card bg-purple-accent">
+            <h5 class="stat-card-title">Pending Tasks</h5>
+            <h2 class="stat-card-value">{{stats.pending}}</h2>
+            <i class="fas fa-folder stat-card-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card bg-orange-accent">
+            <h5 class="stat-card-title">Success Rate</h5>
+            <h2 class="stat-card-value">{{stats.successPercentage}}%</h2>
+            <i class="fas fa-bolt stat-card-icon"></i>
+        </div>
+    </div>
+</div>
+
+<h4 class="mb-3" style="color: #e2e8f0; font-weight: 600;"><i class="fas fa-clipboard-list mr-2"></i>Complaint Database</h4>
+<div class="table-responsive mb-5">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Complaint ID</th>
+          <th scope="col">Customer Name</th>
+          <th scope="col">Customer Contact</th>
+          <th scope="col">Address</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each complaints}}
+            <tr>
+                <td><span class="badge" style="background: #334155; color: #fff;">{{_id}}</span></td>          
+                <td>{{name}}</td>
+                <td>{{contact}}</td>
+                <td>{{address}}</td>
+                <td>{{desc}}</td>
+            </tr>
+        {{/each}}
+      </tbody>
+    </table>
+</div>
+
+<div class="form-container">
+    <h3 class="mb-4" style="color: #e2e8f0; font-weight: 600;"><i class="fas fa-tasks mr-2"></i>Assign Complaint</h3>
+    <form method="post" action="/assign">
+        <div class="form-group mb-4">
+            <label style="color: #94a3b8;">Complaint Number</label>
+            <input class="form-control" type="text" name="complaintID" placeholder="Input specific Complaint ID">
+        </div>
+        <div class="form-group mb-4">
+            <label style="color: #94a3b8;">Select Engineer</label>
+            <select name="engineerName" id="engineerName" class="form-control" style="cursor: pointer;">
+                {{#each engineer}}
+                    <option value={{username}}> {{username}} </option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="form-group mb-0 mt-4">
+            <button type="submit" class="btn btn-primary btn-block p-3 font-weight-bold" style="font-size: 1.1rem;">Assign Ticket</button>
+        </div>
+    </form>
+</div>
+
+<h4 class="mb-3 mt-5" style="color: #e2e8f0; font-weight: 600;"><i class="fas fa-comments mr-2"></i>Internal Feedbacks</h4>
+<div class="table-responsive mb-5">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Submitter Name</th>
+          <th scope="col">Contact Email</th>
+          <th scope="col">Feedback Body</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each feedbacks}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{email}}</td>
+                <td>{{message}}</td>
+            </tr>
+        {{/each}}
+      </tbody>
+    </table>
+</div>

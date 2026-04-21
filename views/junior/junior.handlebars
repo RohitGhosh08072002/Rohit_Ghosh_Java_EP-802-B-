@@ -1,0 +1,78 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 style="color: #fff; font-weight: 600;">Welcome, {{user.name}} 👨‍🔧</h3>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-3 mb-3">
+        <div class="stat-card bg-blue-accent">
+            <h5 class="stat-card-title">Total Assigned</h5>
+            <h2 class="stat-card-value">{{stats.total}}</h2>
+            <i class="fas fa-chart-bar stat-card-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card bg-green-accent">
+            <h5 class="stat-card-title">Completed Tasks</h5>
+            <h2 class="stat-card-value">{{stats.resolved}}</h2>
+            <i class="fas fa-check-circle stat-card-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card bg-purple-accent">
+            <h5 class="stat-card-title">Pending Tasks</h5>
+            <h2 class="stat-card-value">{{stats.pending}}</h2>
+            <i class="fas fa-folder stat-card-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card bg-orange-accent">
+            <h5 class="stat-card-title">Success Rate</h5>
+            <h2 class="stat-card-value">{{stats.successPercentage}}%</h2>
+            <i class="fas fa-bolt stat-card-icon"></i>
+        </div>
+    </div>
+</div>
+
+<h4 style="color: #cbd5e1; margin-top: 2rem; margin-bottom: 1.5rem;">Your Assigned Tasks</h4>
+
+{{#if complaints.length}}
+<div class="table-responsive shadow-sm" style="border-radius: 12px; margin-bottom: 3rem;">
+    <table class="table table-hover table-borderless mb-0">
+      <thead style="background: rgba(245, 158, 11, 0.4); color: white;">
+        <tr>
+          <th scope="col" class="py-3 px-4">Complaint ID</th>
+          <th scope="col" class="py-3 px-4">Customer Name</th>
+          <th scope="col" class="py-3 px-4">Customer Contact</th>
+          <th scope="col" class="py-3 px-4">Address</th>
+          <th scope="col" class="py-3 px-4">Description</th>
+          <th scope="col" class="py-3 px-4">Action</th>
+        </tr>
+      </thead>
+      <tbody style="background: rgba(0,0,0,0.2);">
+        {{#each complaints}}
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td class="px-4 py-3"><span class="badge badge-light" style="background: rgba(255,255,255,0.1); color: #fff;">{{_id}}</span></td>          
+                <td class="px-4 py-3">{{name}}</td>
+                <td class="px-4 py-3">{{contact}}</td>
+                <td class="px-4 py-3">{{address}}</td>
+                <td class="px-4 py-3">{{desc}}</td>
+                <td class="px-4 py-3">
+                    {{#if (eq status "Resolved")}}
+                        <span class="badge badge-success px-3 py-2">Resolved</span>
+                    {{else}}
+                        <form action="/resolve" method="POST" style="margin: 0;">
+                            <input type="hidden" name="complaintID" value="{{_id}}">
+                            <button type="submit" class="btn btn-sm btn-success px-3 py-1 font-weight-bold">Mark Done</button>
+                        </form>
+                    {{/if}}
+                </td>
+            </tr>
+        {{/each}}
+      </tbody>
+    </table>
+</div>
+{{else}}
+<div class="dashboard-card" style="margin-top: 2rem; background: rgba(0,0,0,0.2);">
+  <p style="color: #cbd5e1; font-size: 1.2rem; margin-bottom: 0;">You currently have no complaints assigned to you. Take a break!</p>
+</div>
+{{/if}}

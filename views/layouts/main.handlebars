@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Resolutix Dashboard</title>
+    <!-- Modern Font: Inter -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  </head>
+  <body>
+   
+    <nav class="navbar navbar-expand-lg mb-4">
+      <div class="container-fluid px-md-4">
+        <a class="navbar-brand" href="/">
+            <div class="navbar-brand-icon">
+                <i class="fas fa-university text-white"></i>
+            </div>
+            <div>
+                <div style="font-size: 1.25rem; font-weight: 700; line-height: 1;">Resolutix</div>
+            </div>
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02">
+            <i class="fas fa-bars text-white"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor02">
+            <ul class="navbar-nav mx-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="/complaint"><i class="fas fa-file-alt mr-2"></i>Submit</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active-pill" href="/"><i class="fas fa-columns mr-2"></i>Dashboard</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto align-items-center">
+                {{#if user}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0 !important; border-radius: 50px;">
+                            <div class="user-profile m-0">
+                                <div class="user-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="user-info pr-2">
+                                    <span class="user-name">{{user.name}}</span>
+                                    <span class="user-role">{{user.role}}</span>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="userProfileDropdown" style="background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; margin-top: 12px;">
+                            <a class="dropdown-item" href="/feedback" style="color: #cbd5e1; font-weight: 500; padding: 0.75rem 1.5rem;"><i class="fas fa-comment-alt mr-2 text-primary"></i> Provide Feedback</a>
+                            <div class="dropdown-divider" style="border-top-color: #334155;"></div>
+                            <a class="dropdown-item" href="/logout" style="color: #ef4444; font-weight: 500; padding: 0.75rem 1.5rem;"><i class="fas fa-power-off mr-2"></i> Logout</a>
+                        </div>
+                    </li>
+                {{else}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="guestProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0 !important; border-radius: 50%;">
+                            <div class="user-avatar m-0" style="background-color: #475569; width: 40px; height: 40px;">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="guestProfileDropdown" style="background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; margin-top: 12px;">
+                            <a class="dropdown-item" href="/login" style="color: #cbd5e1; font-weight: 500; padding: 0.75rem 1.5rem;"><i class="fas fa-sign-in-alt mr-2 text-primary"></i> Login</a>
+                            <div class="dropdown-divider" style="border-top-color: #334155;"></div>
+                            <a class="dropdown-item" href="/register" style="color: #cbd5e1; font-weight: 500; padding: 0.75rem 1.5rem;"><i class="fas fa-user-plus mr-2 text-primary"></i> Register</a>
+                        </div>
+                    </li>
+                {{/if}}
+            </ul>
+        </div>
+      </div>
+    </nav>
+    
+    <div class="container-fluid px-md-5 pb-5">
+      {{#if success_msg}}
+        <div class="alert alert-success mt-3 mb-4 text-center font-weight-bold" style="background-color: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #4ade80;">{{success_msg}}</div>
+      {{/if}}
+      {{#if error_msg}}
+        <div class="alert alert-danger mt-3 mb-4 text-center font-weight-bold" style="background-color: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171;">{{error_msg}}</div>
+      {{/if}}
+      {{#if error}}
+        <div class="alert alert-danger mt-3 mb-4 text-center font-weight-bold" style="background-color: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171;">{{error}}</div>
+      {{/if}}
+      {{#if errors}}
+        {{#each errors}}
+          <div class="alert alert-danger mt-3 mb-4 text-center font-weight-bold" style="background-color: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171;">{{msg}}</div>
+        {{/each}}
+      {{/if}}
+      
+      {{{body}}}
+      
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

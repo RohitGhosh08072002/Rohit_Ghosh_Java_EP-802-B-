@@ -1,0 +1,37 @@
+<div class="form-container">
+  <h2 class="page-title">Create Account</h2>
+  <form method="post" action="/register">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input class="form-control" type="text" name="name" id="name" placeholder="John Doe">
+    </div>
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input class="form-control" type="text" name="username" id="username" placeholder="johndoe123">
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input class="form-control" type="email" name="email" id="email" placeholder="john@example.com">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input class="form-control" type="password" name="password" id="password" placeholder="Choose a strong password">
+    </div>
+    <div class="form-group">
+      <label for="password2">Confirm Password</label>
+      <input class="form-control" type="password" name="password2" id="password2" placeholder="Repeat your password">
+    </div>
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select class="form-control" name="role" id="role">
+          <option value="user">User</option>
+          <option value="jeng">Junior Engineer</option>
+          <option value="admin">Admin</option>
+      </select>
+    </div>
+    <button class="btn btn-success" type="submit">Complete Registration</button>
+    <div class="text-center mt-4 pt-3 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
+      <span class="text-muted">Already Have An Account?</span> <a class="btn btn-warning btn-sm ml-2" href="/login">Login Now</a>
+    </div>
+  </form>
+</div>
