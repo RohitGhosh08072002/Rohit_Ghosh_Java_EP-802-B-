@@ -8,8 +8,29 @@ let Complaint = require('../models/complaint');
 let ComplaintMapping = require('../models/complaint-mapping');
 let Feedback = require('../models/feedback');
 
+// Landing Page
+router.get('/', (req, res, next) => {
+    Complaint.getAllComplaints((err, complaints) => {
+        if (err) return res.render('landing', { layout: 'main', stats: null });
+        ComplaintMapping.getAllMappings((err, mappings) => {
+            if (err) return res.render('landing', { layout: 'main', stats: null });
+            Feedback.getAllFeedbacks((err, feedbacks) => {
+                const total = complaints ? complaints.length : 0;
+                const resolved = mappings ? mappings.length : 0;
+                const pending = Math.max(0, total - resolved);
+                const successRate = total > 0 ? Math.round((resolved / total) * 100) : 0;
+                const feedbackCount = feedbacks ? feedbacks.length : 0;
+                res.render('landing', {
+                    layout: 'main',
+                    stats: { total, resolved, pending, successRate, feedbackCount }
+                });
+            });
+        });
+    });
+});
+
 // Home Page - Dashboard
-router.get('/', ensureAuthenticated, (req, res, next) => {
+router.get('/dashboard', ensureAuthenticated, (req, res, next) => {
     Complaint.getAllComplaints((err, complaints) => {
         if (err) throw err;
         
@@ -33,21 +54,23 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
     });
 });
 
-// Login Form
+// Login Form - redirect to landing page auth section
 router.get('/login', (req, res, next) => {
-    res.render('login');
+    if (req.isAuthenticated()) return res.redirect('/dashboard');
+    res.redirect('/#auth-section');
 });
 
-// Register Form
+// Register Form - redirect to landing page auth section
 router.get('/register', (req, res, next) => {
-    res.render('register');
+    if (req.isAuthenticated()) return res.redirect('/dashboard');
+    res.redirect('/#auth-section');
 });
 
 // Logout
 router.get('/logout', ensureAuthenticated,(req, res, next) => {
     req.logout();
     req.flash('success_msg', 'You are logged out');
-    res.redirect('/login');
+    res.redirect('/');
 });
 
 // Admin
@@ -359,7 +382,7 @@ passport.deserializeUser((id, done) => {
 // Login Processing
 router.post('/login', passport.authenticate('local', 
     { 
-        failureRedirect: '/login', 
+        failureRedirect: '/', 
         failureFlash: true 
     
     }), (req, res, next) => {
@@ -375,7 +398,7 @@ router.post('/login', passport.authenticate('local',
             res.redirect('/jeng');
         }
         else{
-            res.redirect('/');
+            res.redirect('/dashboard');
         }
     });
 });
@@ -385,8 +408,8 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     } else {
-        req.flash('error_msg', 'You are not Authorized to view this page');
-        res.redirect('/login');
+        req.flash('error_msg', 'Please log in to view this page');
+        res.redirect('/');
     }
 }
 

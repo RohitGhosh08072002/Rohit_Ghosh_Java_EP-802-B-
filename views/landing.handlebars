@@ -1,0 +1,563 @@
+<style>
+/* Hide Scrollbars */
+body {
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    scroll-behavior: smooth; /* Native smooth scroll */
+}
+body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(79, 70, 229, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+}
+
+@keyframes titleGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Landing specific styles */
+.hero-section {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+.resolutix-title {
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(270deg, #60a5fa, #c084fc, #3b82f6);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleGradient 5s ease infinite;
+    margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: #94a3b8;
+    font-weight: 400;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+.cta-button {
+    padding: 1rem 2.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+    animation: pulseGlow 2s infinite;
+    text-decoration: none !important;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+    color: white;
+}
+
+.features-section {
+    padding: 2.5rem 0 1.5rem;
+}
+
+.feature-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem 1.4rem;
+    height: 100%;
+    transition: all 0.4s ease;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.feature-card.animate-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(96, 165, 250, 0.5);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.feature-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
+    color: #60a5fa;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+    color: #fff;
+    background: linear-gradient(135deg, #3b82f6, #9333ea);
+}
+
+.feature-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+}
+
+.feature-desc {
+    color: #94a3b8;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Delay animations for cards */
+.delay-1 { animation-delay: 0.2s !important; }
+.delay-2 { animation-delay: 0.4s !important; }
+.delay-3 { animation-delay: 0.6s !important; }
+
+/* Abstract shapes background */
+.shape {
+    position: absolute;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.5;
+    border-radius: 50%;
+    animation: pulseGlow 8s infinite alternate;
+}
+.shape-1 {
+    top: -10%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: rgba(59, 130, 246, 0.3);
+}
+.shape-2 {
+    bottom: -10%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: rgba(147, 51, 234, 0.3);
+}
+/* Bounce Arrow */
+@keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(12px); }
+}
+
+.scroll-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    color: #94a3b8;
+    font-size: 1.4rem;
+    cursor: pointer;
+    animation: bounceDown 1.8s ease-in-out infinite;
+    transition: all 0.3s ease;
+    text-decoration: none !important;
+}
+
+.scroll-arrow:hover {
+    background: rgba(96, 165, 250, 0.15);
+    border-color: #60a5fa;
+    color: #60a5fa;
+    transform: scale(1.15);
+    animation: none;
+}
+</style>
+
+<div class="shape shape-1"></div>
+<div class="shape shape-2"></div>
+
+<!-- Hero Section -->
+<section class="hero-section text-center">
+    <div class="container hero-content">
+        <h1 class="resolutix-title">Resolutix</h1>
+        <p class="hero-subtitle">The intelligent, lightning-fast platform designed to escalate,<br>track, and resolve complaints with unparalleled precision.</p>
+        
+        {{#if user}}
+            <a href="/dashboard" class="cta-button d-inline-block mt-3"><i class="fas fa-columns mr-2"></i>Go to Dashboard</a>
+        {{else}}
+            <a href="#auth-section" class="cta-button d-inline-block mt-3 mr-3"><i class="fas fa-rocket mr-2"></i>Get Started Now</a>
+            <a href="#auth-section" class="cta-button d-inline-block mt-3" style="background: linear-gradient(135deg, #7c3aed, #9333ea);"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
+        {{/if}}
+    </div>
+    <!-- Down Arrow → Stats -->
+    <div class="text-center" style="position: absolute; bottom: 2rem; left: 0; right: 0;">
+        <a href="#stats-section" class="scroll-arrow" id="arrow-to-features" title="See platform stats">
+            <i class="fas fa-chevron-down"></i>
+        </a>
+    </div>
+</section>
+
+<!-- ── Platform Stats Section ── -->
+{{#if stats}}
+<section id="stats-section" class="container" style="padding: 4rem 0 2rem;">
+    <div class="text-center mb-5" style="animation: fadeInUp 1s ease-out forwards;">
+        <h2 class="font-weight-bold" style="color: #f8fafc; font-size: 2.2rem;">Platform at a Glance</h2>
+        <p style="color: #94a3b8; font-size: 1rem;">Live numbers from Resolutix — updated every time you visit.</p>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row mb-5">
+        <div class="col-6 col-md-3 mb-3">
+            <div class="lp-stat-card" style="border-top: 3px solid #3b82f6;">
+                <i class="fas fa-file-alt lp-stat-icon" style="color:#3b82f6;"></i>
+                <div class="lp-stat-value">{{stats.total}}</div>
+                <div class="lp-stat-label">Total Complaints</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="lp-stat-card" style="border-top: 3px solid #22c55e;">
+                <i class="fas fa-check-circle lp-stat-icon" style="color:#22c55e;"></i>
+                <div class="lp-stat-value">{{stats.resolved}}</div>
+                <div class="lp-stat-label">Resolved</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="lp-stat-card" style="border-top: 3px solid #f97316;">
+                <i class="fas fa-clock lp-stat-icon" style="color:#f97316;"></i>
+                <div class="lp-stat-value">{{stats.pending}}</div>
+                <div class="lp-stat-label">Pending</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="lp-stat-card" style="border-top: 3px solid #a855f7;">
+                <i class="fas fa-bolt lp-stat-icon" style="color:#a855f7;"></i>
+                <div class="lp-stat-value">{{stats.successRate}}%</div>
+                <div class="lp-stat-label">Success Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row">
+        <div class="col-md-5 mb-4">
+            <div class="lp-chart-panel">
+                <h5 class="lp-chart-title"><i class="fas fa-chart-pie mr-2" style="color:#a855f7;"></i>Resolution Overview</h5>
+                <div style="height:260px; display:flex; align-items:center; justify-content:center;">
+                    <canvas id="landingDoughnut"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7 mb-4">
+            <div class="lp-chart-panel">
+                <h5 class="lp-chart-title"><i class="fas fa-chart-bar mr-2" style="color:#60a5fa;"></i>Complaints vs Resolved</h5>
+                <div style="height:260px;">
+                    <canvas id="landingBar"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Arrow down to features -->
+    <div class="text-center mt-3 pb-2">
+        <a href="#features-section" class="scroll-arrow" title="See features">
+            <i class="fas fa-chevron-down"></i>
+        </a>
+    </div>
+</section>
+
+<style>
+.lp-stat-card {
+    background: rgba(30,41,59,0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 1.6rem 1.2rem;
+    text-align: center;
+    animation: fadeInUp 0.8s ease-out forwards;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.lp-stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+}
+.lp-stat-icon { font-size: 1.8rem; margin-bottom: 0.6rem; display:block; }
+.lp-stat-value { font-size: 2.4rem; font-weight: 800; color: #f8fafc; line-height:1; }
+.lp-stat-label { font-size: 0.82rem; color: #94a3b8; margin-top: 0.4rem; letter-spacing:0.5px; text-transform:uppercase; }
+
+.lp-chart-panel {
+    background: rgba(30,41,59,0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 1.5rem;
+    height: 100%;
+}
+.lp-chart-title { color: #e2e8f0; font-weight: 600; font-size: 1rem; margin-bottom: 1rem; }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = '#1e293b';
+
+    // Doughnut
+    new Chart(document.getElementById('landingDoughnut'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Resolved', 'Pending'],
+            datasets: [{
+                data: [{{stats.resolved}}, {{stats.pending}}],
+                backgroundColor: ['#22c55e', '#f97316'],
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            cutout: '72%',
+            plugins: { legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true } } }
+        }
+    });
+
+    // Bar
+    new Chart(document.getElementById('landingBar'), {
+        type: 'bar',
+        data: {
+            labels: ['Total', 'Resolved', 'Pending'],
+            datasets: [{
+                label: 'Complaints',
+                data: [{{stats.total}}, {{stats.resolved}}, {{stats.pending}}],
+                backgroundColor: ['rgba(59,130,246,0.8)', 'rgba(34,197,94,0.8)', 'rgba(249,115,22,0.8)'],
+                borderRadius: 8,
+                borderSkipped: false,
+                barPercentage: 0.55
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                x: { grid: { display: false } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+});
+</script>
+{{/if}}
+
+<!-- Features Section -->
+<section class="features-section container" id="features-section">
+    <div class="text-center mb-5" style="animation: fadeInUp 1s ease-out 0.8s forwards; opacity: 0;">
+        <h2 class="font-weight-bold" style="color: #f8fafc; font-size: 2.5rem;">Why Choose Resolutix?</h2>
+        <p style="color: #94a3b8; font-size: 1.1rem;">Empowering users and engineers through a seamless, automated workflow.</p>
+    </div>
+    
+    <div class="row">
+        <!-- Feature 1 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card animate-in delay-1">
+                <div class="feature-icon-wrapper">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="feature-title">Lightning Fast Resolution</h3>
+                <p class="feature-desc">Experience rapid issue resolution. Our platform instantly routes your concerns to the right engineers, cutting downtime to an absolute minimum.</p>
+            </div>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card animate-in delay-2">
+                <div class="feature-icon-wrapper">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h3 class="feature-title">Real-Time Tracking</h3>
+                <p class="feature-desc">Never stay in the dark. Monitor the exact status of your complaint at any given moment with our transparent 24-character ID tracking system.</p>
+            </div>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card animate-in delay-3">
+                <div class="feature-icon-wrapper">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="feature-title">Intelligent Assignment</h3>
+                <p class="feature-desc">Administrators have full oversight. Issues are categorized and assigned dynamically to Junior Engineers based on workload and expertise.</p>
+            </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card animate-in delay-1" style="animation-delay: 0.8s;">
+                <div class="feature-icon-wrapper">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">Uncompromised Security</h3>
+                <p class="feature-desc">Your data is safe. Built with enterprise-grade Bcrypt hashing and Passport session architecture to ensure maximum privacy.</p>
+            </div>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card animate-in delay-2" style="animation-delay: 1s;">
+                <div class="feature-icon-wrapper">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h3 class="feature-title">Advanced Analytics</h3>
+                <p class="feature-desc">Gain powerful insights with beautifully rendered Chart.js dashboards showcasing success percentages and performance metrics.</p>
+            </div>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card animate-in delay-3" style="animation-delay: 1.2s;">
+                <div class="feature-icon-wrapper">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h3 class="feature-title">Premium Aesthetics</h3>
+                <p class="feature-desc">Enjoy navigating through a responsive, modern UI crafted with custom Glassmorphism and sophisticated CSS animations.</p>
+            </div>
+        </div>
+    </div>
+    <!-- Down Arrow → Auth -->
+    <div class="text-center mt-4 pb-4">
+        <a href="#auth-section" class="scroll-arrow" id="arrow-to-auth" title="Get Started / Login">
+            <i class="fas fa-chevron-down"></i>
+        </a>
+    </div>
+</section>
+
+<!-- Auth Section -->
+{{#unless user}}
+<section id="auth-section" class="container" style="padding: 5rem 0;">
+    <div class="row">
+        <!-- Login Form -->
+        <div class="col-lg-5 mb-5 mx-auto">
+            <div class="feature-card animate-in delay-2" style="padding: 3rem 2.5rem;">
+                <div class="feature-icon-wrapper mx-auto mb-3" style="width: 60px; height: 60px;">
+                    <i class="fas fa-sign-in-alt"></i>
+                </div>
+                <h2 class="feature-title text-center mb-4" style="font-size: 2rem;">Welcome Back</h2>
+                <form method="post" action="/login">
+                    <div class="form-group mb-4">
+                        <label style="color: #94a3b8; font-weight: 500;">Username</label>
+                        <input class="form-control" type="text" name="username" placeholder="Enter your username" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 1.2rem;">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label style="color: #94a3b8; font-weight: 500;">Password</label>
+                        <input class="form-control" type="password" name="password" placeholder="Enter your password" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 1.2rem;">
+                    </div>
+                    <button class="cta-button w-100 mt-2" style="padding: 0.8rem; font-size: 1.1rem; border-radius: 12px; animation: none;" type="submit">Login to Dashboard</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div class="col-lg-6 mb-5 mx-auto">
+            <div class="feature-card animate-in delay-3" style="padding: 3rem 2.5rem;">
+                <div class="feature-icon-wrapper mx-auto mb-3" style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2)); color: #34d399;">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2 class="feature-title text-center mb-4" style="font-size: 2rem;">Create Account</h2>
+                <form method="post" action="/register">
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label style="color: #94a3b8; font-weight: 500;">Name</label>
+                            <input class="form-control" type="text" name="name" placeholder="John Doe" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label style="color: #94a3b8; font-weight: 500;">Username</label>
+                            <input class="form-control" type="text" name="username" placeholder="johndoe123" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label style="color: #94a3b8; font-weight: 500;">Email</label>
+                        <input class="form-control" type="email" name="email" placeholder="john@example.com" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label style="color: #94a3b8; font-weight: 500;">Password</label>
+                            <input class="form-control" type="password" name="password" placeholder="Strong password" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label style="color: #94a3b8; font-weight: 500;">Confirm Password</label>
+                            <input class="form-control" type="password" name="password2" placeholder="Repeat password" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                        </div>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label style="color: #94a3b8; font-weight: 500;">Role</label>
+                        <select class="form-control" name="role" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                            <option value="user" style="color: black;">Standard User</option>
+                            <option value="jeng" style="color: black;">Junior Engineer</option>
+                            <option value="admin" style="color: black;">Administrator</option>
+                        </select>
+                    </div>
+                    <button class="cta-button w-100 mt-2" style="padding: 0.8rem; font-size: 1.1rem; border-radius: 12px; animation: none; background: linear-gradient(135deg, #10b981, #059669);" type="submit">Complete Registration</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{{/unless}}
+
+<script>
+// Smooth scroll for all internal anchor links
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            var targetId = this.getAttribute('href').substring(1);
+            var target = document.getElementById(targetId);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+});
+</script>

@@ -14,9 +14,17 @@
     <nav class="navbar navbar-expand-lg mb-4">
       <div class="container-fluid px-md-4">
         <a class="navbar-brand" href="/">
-            <div class="navbar-brand-icon">
-                <i class="fas fa-university text-white"></i>
-            </div>
+            <div style="
+                width: 38px; height: 38px;
+                border-radius: 10px;
+                background: linear-gradient(135deg, #7c3aed, #3b82f6);
+                display: flex; align-items: center; justify-content: center;
+                font-size: 1.15rem; font-weight: 900; color: #fff;
+                letter-spacing: -1px;
+                box-shadow: 0 0 14px rgba(124,58,237,0.45);
+                margin-right: 10px;
+                flex-shrink: 0;
+            ">R</div>
             <div>
                 <div style="font-size: 1.25rem; font-weight: 700; line-height: 1;">Resolutix</div>
             </div>
@@ -27,46 +35,16 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarColor02">
-            <ul class="navbar-nav mx-auto align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link" href="/complaint"><i class="fas fa-file-alt mr-2"></i>Submit</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active-pill" href="/"><i class="fas fa-columns mr-2"></i>Dashboard</a>
-                </li>
-            </ul>
             <ul class="navbar-nav ml-auto align-items-center">
                 {{#if user}}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0 !important; border-radius: 50px;">
-                            <div class="user-profile m-0">
-                                <div class="user-avatar">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="user-info pr-2">
-                                    <span class="user-name">{{user.name}}</span>
-                                    <span class="user-role">{{user.role}}</span>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="userProfileDropdown" style="background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; margin-top: 12px;">
-                            <a class="dropdown-item" href="/feedback" style="color: #cbd5e1; font-weight: 500; padding: 0.75rem 1.5rem;"><i class="fas fa-comment-alt mr-2 text-primary"></i> Provide Feedback</a>
-                            <div class="dropdown-divider" style="border-top-color: #334155;"></div>
-                            <a class="dropdown-item" href="/logout" style="color: #ef4444; font-weight: 500; padding: 0.75rem 1.5rem;"><i class="fas fa-power-off mr-2"></i> Logout</a>
+                    <li class="nav-item mr-3">
+                        <div class="greeting-badge">
+                            <span class="greeting-wave">👋</span>
+                            <span class="greeting-text">Hi, <strong>{{user.name}}</strong></span>
                         </div>
                     </li>
-                {{else}}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="guestProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0 !important; border-radius: 50%;">
-                            <div class="user-avatar m-0" style="background-color: #475569; width: 40px; height: 40px;">
-                                <i class="fas fa-user text-white"></i>
-                            </div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="guestProfileDropdown" style="background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; margin-top: 12px;">
-                            <a class="dropdown-item" href="/login" style="color: #cbd5e1; font-weight: 500; padding: 0.75rem 1.5rem;"><i class="fas fa-sign-in-alt mr-2 text-primary"></i> Login</a>
-                            <div class="dropdown-divider" style="border-top-color: #334155;"></div>
-                            <a class="dropdown-item" href="/register" style="color: #cbd5e1; font-weight: 500; padding: 0.75rem 1.5rem;"><i class="fas fa-user-plus mr-2 text-primary"></i> Register</a>
-                        </div>
+                    <li class="nav-item">
+                        <a class="nav-link logout-btn" href="/logout"><i class="fas fa-power-off mr-1"></i> Logout</a>
                     </li>
                 {{/if}}
             </ul>

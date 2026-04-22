@@ -1,134 +1,177 @@
-<div class="text-center mb-4">
-    <p style="color: #94a3b8; font-size: 0.95rem;"><i class="fas fa-chart-bar mr-2"></i>Real-time analytics and complaint management</p>
-</div>
+<style>
+/* ── Complaint Form Styles ── */
+@keyframes formSlideIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+@keyframes inputGlow {
+    from { box-shadow: 0 0 0px rgba(139,92,246,0); }
+    to   { box-shadow: 0 0 12px rgba(139,92,246,0.35); }
+}
 
-<div class="row mb-4">
-    <div class="col-md-3 mb-3">
-        <div class="stat-card bg-blue-accent">
-            <h5 class="stat-card-title">Total Complaints</h5>
-            <h2 class="stat-card-value">{{stats.total}}</h2>
-            <i class="fas fa-chart-bar stat-card-icon"></i>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="stat-card bg-green-accent">
-            <h5 class="stat-card-title">Resolved</h5>
-            <h2 class="stat-card-value">{{stats.resolved}}</h2>
-            <i class="fas fa-map-marker-alt stat-card-icon"></i>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="stat-card bg-purple-accent">
-            <h5 class="stat-card-title">Pending Tasks</h5>
-            <h2 class="stat-card-value">{{stats.pending}}</h2>
-            <i class="fas fa-folder stat-card-icon"></i>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="stat-card bg-orange-accent">
-            <h5 class="stat-card-title">Success Rate</h5>
-            <h2 class="stat-card-value">{{stats.successPercentage}}%</h2>
-            <i class="fas fa-bolt stat-card-icon"></i>
-        </div>
-    </div>
-</div>
+.complaint-wrapper {
+    min-height: calc(100vh - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
 
-<div class="row mb-5">
-    <!-- Chart 1 -->
-    <div class="col-md-6 mb-4">
-        <div class="chart-panel h-100">
-            <h4 class="chart-panel-title">
-                <span class="icon" style="color: #60a5fa;"><i class="fas fa-square"></i></span>
-                Complaints Trend (Distribution)
-            </h4>
-            <div style="height: 300px;">
-                <canvas id="complaintsChart"></canvas>
+.complaint-card {
+    width: 100%;
+    max-width: 660px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(139,92,246,0.25);
+    border-radius: 24px;
+    padding: 3rem 3.5rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
+    animation: formSlideIn 0.7s cubic-bezier(0.34,1.2,0.64,1) forwards;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative top glow */
+.complaint-card::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 300px; height: 120px;
+    background: radial-gradient(ellipse, rgba(139,92,246,0.35) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.complaint-card-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+    background: linear-gradient(135deg, #c4b5fd, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.complaint-card-subtitle {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 2.5rem;
+}
+
+.complaint-form-group {
+    margin-bottom: 1.4rem;
+}
+
+.complaint-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+}
+
+.complaint-label i { color: #8b5cf6; font-size: 0.85rem; }
+
+.complaint-input {
+    width: 100%;
+    background: rgba(30,41,59,0.6);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    color: #f1f5f9;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    outline: none;
+    resize: none;
+}
+
+.complaint-input::placeholder { color: #475569; }
+
+.complaint-input:focus {
+    border-color: #8b5cf6;
+    background: rgba(30,41,59,0.9);
+    animation: inputGlow 0.3s forwards;
+}
+
+.complaint-submit-btn {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #fff;
+    background: linear-gradient(135deg, #7c3aed, #3b82f6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.complaint-submit-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.complaint-submit-btn:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 8px 28px rgba(124,58,237,0.5);
+}
+
+.complaint-submit-btn:hover::after { opacity: 1; }
+.complaint-submit-btn:active { transform: scale(0.98); }
+</style>
+
+<div class="complaint-wrapper">
+    <div class="complaint-card">
+        <h2 class="complaint-card-title">Register a Complaint</h2>
+        <p class="complaint-card-subtitle">Fill in the details below and we'll escalate your issue instantly.</p>
+
+        <form method="post" action="/registerComplaint">
+            <div class="row">
+                <div class="col-md-6 complaint-form-group">
+                    <label class="complaint-label"><i class="fas fa-user"></i> Name</label>
+                    <input class="complaint-input" type="text" name="name" placeholder="Full Name">
+                </div>
+                <div class="col-md-6 complaint-form-group">
+                    <label class="complaint-label"><i class="fas fa-envelope"></i> Email</label>
+                    <input class="complaint-input" type="email" name="email" placeholder="Email Address">
+                </div>
             </div>
-        </div>
-    </div>
-    <!-- Chart 2 -->
-    <div class="col-md-6 mb-4">
-        <div class="chart-panel h-100">
-            <h4 class="chart-panel-title">
-                <span class="icon" style="color: #a855f7;"><i class="fas fa-folder"></i></span>
-                Issue Type Distribution
-            </h4>
-            <div style="height: 300px;">
-                <canvas id="barChart"></canvas>
+
+            <div class="row">
+                <div class="col-md-6 complaint-form-group">
+                    <label class="complaint-label"><i class="fas fa-phone"></i> Contact Number</label>
+                    <input class="complaint-input" type="text" name="contact" placeholder="Phone Number">
+                </div>
+                <div class="col-md-6 complaint-form-group">
+                    <label class="complaint-label"><i class="fas fa-map-marker-alt"></i> Physical Address</label>
+                    <input class="complaint-input" type="text" name="address" placeholder="123 Street, Area Code">
+                </div>
             </div>
-        </div>
+
+            <div class="complaint-form-group">
+                <label class="complaint-label"><i class="fas fa-align-left"></i> Description</label>
+                <textarea class="complaint-input" name="desc" rows="5" placeholder="Please describe your complaint in detail..."></textarea>
+            </div>
+
+            <button class="complaint-submit-btn" type="submit">
+                <i class="fas fa-paper-plane mr-2"></i> Submit Complaint
+            </button>
+        </form>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        Chart.defaults.color = '#94a3b8';
-        Chart.defaults.borderColor = '#334155';
-
-        var doughnutCtx = document.getElementById('complaintsChart').getContext('2d');
-        var myDoughnutChart = new Chart(doughnutCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Resolved', 'Pending'],
-                datasets: [{
-                    data: [{{stats.resolved}}, {{stats.pending}}],
-                    backgroundColor: [
-                        '#22c55e', 
-                        '#f97316'  
-                    ],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { padding: 20 }
-                    }
-                }
-            }
-        });
-
-        var barCtx = document.getElementById('barChart').getContext('2d');
-        var myBarChart = new Chart(barCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Volume'],
-                datasets: [
-                    {
-                        label: 'Total Complaints',
-                        data: [{{stats.total}}],
-                        backgroundColor: '#a855f7',
-                        barPercentage: 0.6
-                    },
-                    {
-                        label: 'Resolved',
-                        data: [{{stats.resolved}}],
-                        backgroundColor: '#8b5cf6',
-                        barPercentage: 0.6
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    },
-                    x: {
-                        grid: { display: false }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-    });
-</script>
