@@ -1,104 +1,215 @@
-# Digital Complaint Escalation and Resolution Monitoring System
+# Resolutix — System Design
 
-## Table of Contents
-1. [System Overview](#system-overview)
-2. [Technology Stack](#technology-stack)
-3. [Architecture Pattern](#architecture-pattern)
-4. [User Roles and Permissions](#user-roles-and-permissions)
-5. [Database Schema](#database-schema)
-6. [API Routing Structure](#api-routing-structure)
-7. [User Interface Design](#user-interface-design)
+## 1. Architecture Overview
+
+Resolutix follows a **dual-stack architecture**:
+
+- **Primary stack:** Node.js + Express + Handlebars (server-side rendered, currently live)
+- **Secondary stack:** Java Spring Boot REST API (parallel backend, ready for frontend decoupling)
+
+Both stacks connect to the same **MongoDB** database (`complaintapp`).
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                        Browser                           │
+│         (Handlebars-rendered HTML + CSS + Chart.js)      │
+└───────────────────────┬──────────────────────────────────┘
+                        │ HTTP
+        ┌───────────────▼──────────────┐
+        │   Node.js / Express Server   │  :3000
+        │   Passport.js  │  Sessions   │
+        │   Mongoose ODM │  Flash msgs │
+        └───────────────┬──────────────┘
+                        │
+        ┌───────────────▼──────────────┐
+        │         MongoDB              │  :27017
+        │   Database: complaintapp     │
+        │   Collections:               │
+        │   • users                    │
+        │   • complaints               │
+        │   • complaintmappings        │
+        │   • feedbacks                │
+        └──────────────────────────────┘
+                        ▲
+        ┌───────────────┴──────────────┐
+        │  Java Spring Boot REST API   │  :8080
+        │  Spring Data MongoDB         │
+        │  Spring Security (BCrypt)    │
+        └──────────────────────────────┘
+```
 
 ---
 
-## System Overview
-The Digital Complaint Escalation and Resolution Monitoring System is a comprehensive web application designed to facilitate the logging, tracking, and resolution of user complaints. The platform effectively bridges the gap between end-users submitting issues and engineers tasked to resolve them, while providing an administrative overview using data persistence and real-time visualization.
+## 2. Page & Route Structure
 
-## Technology Stack
-The application has been migrated from a monolithic Node.js setup to a decoupled, robust **Java Spring Boot** backend.
+| Route | Access | Description |
+|---|---|---|
+| `GET /` | Public | Animated landing page with live stats |
+| `GET /dashboard` | Auth | User dashboard with complaint form |
+| `POST /registerComplaint` | Auth | Submit a new complaint |
+| `GET /track` | Auth | Track a complaint by ID |
+| `GET /admin` | Admin only | Admin dashboard |
+| `POST /admin/assign` | Admin only | Assign complaint to engineer |
+| `GET /jeng` | Jeng only | Junior Engineer dashboard |
+| `POST /jeng/resolve` | Jeng only | Mark complaint as resolved |
+| `GET /feedback` | Auth | Submit feedback |
+| `POST /login` | Public | Authenticate user |
+| `GET /logout` | Auth | Destroy session, redirect to `/` |
 
-*   **Backend Runtime:** Java 17
-*   **Web Framework:** Spring Boot (Spring Web, Spring Security)
-*   **Database:** MongoDB, abstracted via Spring Data MongoDB
-*   **Authentication:** Spring Security with BCrypt Password Hashing
-*   **Legacy Frontend (Optional transition state):** Express-Handlebars / Node.js
-*   **Frontend UI:** Vanilla HTML/CSS, Bootstrap 4, glassmorphism aesthetics.
-*   **Data Visualization:** Chart.js (Doughnut and Bar Charts)
+---
 
-## Architecture Pattern
-The backend project implements a **RESTful API** structural pattern:
-*   **Models (@Document):** Handles interactions directly with the MongoDB database (defined inside `com.example.demo.models`).
-*   **Repositories:** Spring Data MongoDB interfaces abstracting database operations (`com.example.demo.repositories`).
-*   **Controllers (@RestController):** Handle incoming HTTP requests, coordinate with repositories, and return JSON responses (`com.example.demo.controllers`).
-*   **Security Configuration:** Defines route protections and CORS logic (`com.example.demo.security`).
+## 3. Database Schema (MongoDB / Mongoose)
 
-## User Roles and Permissions
-Access Control strictly bifurcates what users can do. Permissions dictate API endpoint accessibility.
+### `users`
+```json
+{
+  "_id": "ObjectId",
+  "name": "String",
+  "username": "String (unique)",
+  "email": "String",
+  "password": "String (bcrypt hashed)",
+  "role": "String (user | jeng | admin)"
+}
+```
 
-| Role ID | Role Name | System Capabilities & Dashboard Views |
-|---------|-----------|---------------------------------------|
-| `user` | Standard User | Can submit new complaints, submit site feedback, and view global resolution analytics. Has no access to internal assignment or management routes. |
-| `jeng` | Junior Engineer | Acts as the resolution agent. Fetches tasks specifically assigned to them via the API, allowing access to customer contact details to solve complaints. |
-| `admin` | Administrator | Total system oversight. Can fetch unassigned tickets, visualize system-wide metrics, read feedback, and assign complaints to specific engineers via `ComplaintMapping`. |
+### `complaints`
+```json
+{
+  "_id": "ObjectId",
+  "complaintId": "String (24-char unique ID)",
+  "name": "String",
+  "email": "String",
+  "contact": "String",
+  "address": "String",
+  "desc": "String",
+  "status": "String (pending | resolved)",
+  "date": "Date"
+}
+```
 
-## Database Schema
-The database operates on 4 key interconnected MongoDB Collections.
+### `complaintmappings`
+```json
+{
+  "_id": "ObjectId",
+  "complaintId": "String",
+  "engineerId": "String (ref: users)",
+  "assignedAt": "Date"
+}
+```
 
-### 1. User
-Stores authentication and identity information. Roles divide system capability.
-*   `id` (String)
-*   `name` (String)
-*   `username` (String, Unique)
-*   `email` (String)
-*   `password` (String, Bcrypt Hashed)
-*   `role` (String) [Enums: 'user', 'jeng', 'admin']
+### `feedbacks`
+```json
+{
+  "_id": "ObjectId",
+  "userId": "String (ref: users)",
+  "message": "String",
+  "date": "Date"
+}
+```
 
-### 2. Complaint
-The primary artifact detailing the issue submitted by end-users.
-*   `id` (String)
-*   `name` (String)
-*   `email` (String)
-*   `contact` (String)
-*   `address` (String)
-*   `desc` (String) - Expanded text detailing the actual problem.
-*   `status` (String) - Default 'Pending'.
+---
 
-### 3. Feedback
-An independent collection for general application feedback or reviews.
-*   `id` (String)
-*   `name` (String)
-*   `email` (String)
-*   `message` (String)
+## 4. Authentication Flow
 
-### 4. ComplaintMapping
-Operates as the junction/assignment table, acting as a relational bridge in a NoSQL environment. 
-*   `id` (String)
-*   `complaintID` (String) - References a unique `id` of a `Complaint`.
-*   `engineerName` (String) - References a `username` of a `User` where `role=jeng`.
+```
+User submits login form (POST /login)
+        │
+        ▼
+Passport LocalStrategy
+  → Finds user by username (UserRepository)
+  → Compares password with bcrypt.compare()
+        │
+   ┌────┴────┐
+   ▼         ▼
+Success     Failure
+  │           │
+  ▼           ▼
+Save      Redirect to /
+session   (flash error)
+  │
+  ▼
+Role-based redirect:
+  admin → /admin
+  jeng  → /jeng
+  user  → /dashboard
+```
 
-## API Routing Structure
-All primary application logic is exposed via Spring Boot REST Controllers.
+---
 
-**Auth Controller (`/api/auth`)**
-*   `POST /register` - Auth creation handler.
-*   `POST /login` - Auth cycle handler and role retrieval.
+## 5. Frontend Design System
 
-**Complaint Controller (`/api/complaints`)**
-*   `POST /register` - Complaint submission pipeline.
-*   `GET /track/{id}` - Retrieves complaint details and resolution mapping based on ID.
-*   `POST /feedback` - Feedback submission pipeline.
+| Token | Value |
+|---|---|
+| Primary gradient | `#7c3aed → #3b82f6` |
+| Background | `#0b1120` (dark navy) |
+| Card background | `rgba(30,41,59,0.7)` glassmorphism |
+| Border | `rgba(255,255,255,0.08)` |
+| Text primary | `#f8fafc` |
+| Text muted | `#94a3b8` |
+| Success | `#22c55e` |
+| Warning | `#f97316` |
+| Danger | `#ef4444` |
+| Font | `Inter` (Google Fonts) |
+| Border radius (cards) | `16–24px` |
 
-**Admin Controller (`/api/admin`)**
-*   `GET /dashboard` - Retrieves total system overhead view, all metrics, user lists, and mappings.
-*   `POST /assign` - Protected admin endpoint to write to `ComplaintMapping`.
+### Key Animations
+| Animation | Usage |
+|---|---|
+| `fadeInUp` | Hero text, feature cards, stat cards |
+| `titleGradient` | "Resolutix" hero title gradient shift |
+| `bounceDown` | Scroll-arrow bounce |
+| `pulseGlow` | CTA buttons, background shapes |
+| `greetingFadeIn` | Navbar greeting badge |
+| `waveHand` | 👋 emoji in greeting |
+| `formSlideIn` | Complaint form card entrance |
+| `inputGlow` | Form input focus effect |
 
-**Junior Engineer Controller (`/api/jeng`)**
-*   `GET /dashboard/{engineerName}` - Retrieves tasks specifically assigned to the given engineer.
-*   `POST /resolve/{complaintID}` - Endpoint to update a complaint's status to 'Resolved'.
+---
 
-## User Interface Design
-The original application UI relies on:
-*   **Animated Gradient Backgrounds:** Smooth transitions via CSS `@keyframes`.
-*   **Glassmorphism Container Forms:** Background transparency (`rgba`) layered over backdrop blur (`backdrop-filter`) to generate a frosted glass facade.
-*   **Google Inter Typography:** Sans-serif clean web fonts.
-*   **Mobile-First Navbar:** Automatically collapses into a hamburger icon at all breakpoints to maintain UI cleanliness and prevent visual clutter.
+## 6. Spring Boot API (Secondary Backend)
+
+### Endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/auth/register` | Register a new user |
+| `POST` | `/api/auth/login` | Authenticate and return session |
+| `GET` | `/api/complaints` | Get all complaints |
+| `POST` | `/api/complaints` | Submit a new complaint |
+| `GET` | `/api/complaints/:id` | Track a complaint by ID |
+| `GET` | `/api/admin/dashboard` | Admin stats aggregation |
+| `POST` | `/api/admin/assign` | Assign complaint to engineer |
+| `GET` | `/api/jeng/assignments` | Get engineer's assigned complaints |
+| `POST` | `/api/jeng/resolve` | Mark complaint as resolved |
+
+### Spring Boot Package Structure
+```
+com.example.demo
+├── models/
+│   ├── User.java
+│   ├── Complaint.java
+│   ├── ComplaintMapping.java
+│   └── Feedback.java
+├── repositories/
+│   ├── UserRepository.java
+│   ├── ComplaintRepository.java
+│   ├── ComplaintMappingRepository.java
+│   └── FeedbackRepository.java
+├── controllers/
+│   ├── AuthController.java
+│   ├── ComplaintController.java
+│   ├── AdminController.java
+│   └── JuniorEngineerController.java
+└── config/
+    └── SecurityConfig.java
+```
+
+---
+
+## 7. Deployment Notes
+
+- **Database:** MongoDB runs locally at `mongodb://localhost:27017/complaintapp`
+- **Node server:** Port `3000` via `npm start`
+- **Spring Boot:** Port `8080` via `./mvnw spring-boot:run`
+- **No credentials** are stored in plain text — all passwords are hashed with BCrypt (cost factor 10)
+- Session secret is managed via `app.js` and should be moved to environment variables in production
